@@ -64,7 +64,7 @@ describe('StorefrontProvider & catalog/offer selector hooks', () => {
     expect(result.current.products).toHaveLength(1)
     expect(result.current.bundle?.name).toBe('All Bundle')
     expect(result.current.bundles).toHaveLength(1)
-    expect(result.current.offer?.name).toBe('Loyalty Offer')
+    expect(result.current.offer?.id).toBe('o1')
     expect(result.current.offers).toHaveLength(1)
     expect(result.current.promotions).toHaveLength(1)
   })

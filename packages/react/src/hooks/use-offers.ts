@@ -23,7 +23,7 @@ export interface LockedOffer {
 export interface CartOfferState {
   applied: {
     offer: StorefrontOffer
-    saving: Money
+    saving: number
   } | null
   next: {
     offer: StorefrontOffer
@@ -140,7 +140,7 @@ export function useCartOffer(context?: StorefrontContext): CartOfferState | null
     return {
       applied,
       next,
-      subtotal: breakdown.subtotal.amount,
+      subtotal: breakdown.subtotal,
       currency,
     }
   }, [storefront, catalog, order])

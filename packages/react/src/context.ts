@@ -76,7 +76,9 @@ export function createEmptyStorefront(): Storefront {
   }
 }
 
-export function createEmptyOpenOrder(currency = ''): OpenOrder {
+export type OpenCartOrder = Extract<Order, { status: OrderStatus.Open }>
+
+export function createEmptyOpenOrder(currency = ''): OpenCartOrder {
   return {
     id: uuidv4(),
     status: OrderStatus.Open,
@@ -835,7 +837,7 @@ export class StorefrontContextImpl implements StorefrontContext {
     const keep = opts?.keepItems ?? false
     const keptItems =
       keep && previous.status === OrderStatus.Open ? previous.items : []
-    const nextOrder: OpenOrder = {
+    const nextOrder: OpenCartOrder = {
       id: uuidv4(),
       currency: this.storefront?.suggestedCurrency || '',
       status: OrderStatus.Open,
@@ -886,7 +888,7 @@ export class StorefrontContextImpl implements StorefrontContext {
   async removeCartOffer(): Promise<void> {
     const order = this.currentOrder
     if (order.status === OrderStatus.Open) {
-      const updated: OpenOrder = { ...order, offerId: undefined }
+      const updated: OpenCartOrder = { ...order, offerId: undefined }
       this.currentOrder = updated
       writeStorage(StorefrontContextImpl.sessionKey, JSON.stringify(updated))
       await this.client.orders.removeOffer(updated.id)

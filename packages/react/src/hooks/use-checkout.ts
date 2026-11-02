@@ -1,6 +1,7 @@
 import {
   CartUtils,
   MoonbaseError,
+  OrderStatus,
   type LineItem,
   type PricingVariation,
   type StorefrontBundle,
@@ -200,7 +201,10 @@ export async function checkoutItems(
       return { next: undefined, completed: false, redirected: false }
     }
 
-    updatedOrder.items = storefront.enrichLineItems(updatedOrder.items, updatedOrder)
+    updatedOrder.items = storefront.enrichLineItems(updatedOrder.items, {
+      ...updatedOrder,
+      status: OrderStatus.Open,
+    })
     const priced = CartUtils.total(
       storefront.storefront,
       updatedOrder,

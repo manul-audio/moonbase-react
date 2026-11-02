@@ -14,7 +14,7 @@ import {
 } from '@moonbase.sh/storefront-api'
 import { useCallback, useMemo } from 'react'
 import { useStore } from 'zustand'
-import type { StorefrontContext } from '../context'
+import type { OpenCartOrder, StorefrontContext } from '../context'
 import { useStorefrontContext } from '../provider'
 import { recordCheckoutGroups } from '../utils/checkout-groups'
 import { resolveRedirect, type CheckoutRedirectMode } from '../utils/checkout-mode'
@@ -89,7 +89,7 @@ export function useCart(context?: StorefrontContext) {
     (draftItems: LineItem[]) => {
       const order = storefront.currentOrder
       if (order.status !== OrderStatus.Open) return
-      let nextOrder: OpenOrder = {
+      const nextOrder: OpenCartOrder = {
         ...order,
         items: draftItems.map((i) => ({ ...i })),
       }
@@ -378,22 +378,29 @@ export function useCart(context?: StorefrontContext) {
         storefront.hasUtmOrReferrer ? storefront.utm : undefined,
       )
       await recordCheckoutGroups(storefront.client, updatedOrder.id, options.groupIds)
-      updatedOrder.items = storefront.enrichLineItems(updatedOrder.items, updatedOrder)
+      const enrichedOrder: OpenCartOrder = {
+        ...updatedOrder,
+        status: OrderStatus.Open,
+        items: storefront.enrichLineItems(updatedOrder.items, {
+          ...updatedOrder,
+          status: OrderStatus.Open,
+        }),
+      }
 
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
           new CustomEvent('moonbase-checkout-initiated', {
-            detail: { order: updatedOrder, total },
+            detail: { order: enrichedOrder, total },
           }),
         )
       }
 
-      const hostedUrl = redirect ? buildHostedRedirectUrl(updatedOrder, absoluteReturnUrl) : null
+      const hostedUrl = redirect ? buildHostedRedirectUrl(enrichedOrder, absoluteReturnUrl) : null
       if (hostedUrl && typeof window !== 'undefined') {
         window.location.href = hostedUrl
         return { next: undefined, completed: false, redirected: true }
-      } else if (updatedOrder.embeddedCheckoutUrl && typeof window !== 'undefined') {
-        const embeddedUrl = updatedOrder.embeddedCheckoutUrl
+      } else if (enrichedOrder.embeddedCheckoutUrl && typeof window !== 'undefined') {
+        const embeddedUrl = enrichedOrder.embeddedCheckoutUrl
         return new Promise((resolve) => {
           mountCheckout(embeddedUrl)
           window.addEventListener(
