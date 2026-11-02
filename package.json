@@ -1,0 +1,11 @@
+{
+  "name": "moonbase-react-storefront",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter @moonbase.sh/react build",
+    "test": "pnpm --filter @moonbase.sh/react test",
+    "type-check": "pnpm --filter @moonbase.sh/react type-check"
+  }
+}
