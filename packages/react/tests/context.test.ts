@@ -84,4 +84,19 @@ describe('StorefrontContext & createStorefront', () => {
     expect(reqA.storefront).not.toBe(reqB.storefront)
     expect(reqA.storefront.store).not.toBe(reqB.storefront.store)
   })
+
+  it('deduplicates tokenStore.onSessionEnded registration across StrictMode remounts', () => {
+    const ctx = createStorefront('https://demo.moonbase.sh')
+    vi.spyOn(ctx, 'updateStorefront').mockResolvedValue(ctx.store.getState().storefront)
+    vi.spyOn(ctx, 'updateUser').mockResolvedValue(null)
+    const onSessionEndedSpy = vi.spyOn(ctx.client.tokenStore, 'onSessionEnded')
+
+    const cleanup1 = ctx.bootBrowser()
+    cleanup1()
+    const cleanup2 = ctx.bootBrowser()
+    cleanup2()
+
+    expect(onSessionEndedSpy).toHaveBeenCalledTimes(1)
+  })
 })
+

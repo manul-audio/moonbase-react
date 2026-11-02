@@ -270,6 +270,10 @@ export function closeCheckout(): void {
   if (wrapper) {
     wrapper.remove()
     releaseWrapper()
+    if (activeMessageListener) {
+      window.removeEventListener('message', activeMessageListener)
+      activeMessageListener = null
+    }
     window.dispatchEvent(
       new CustomEvent('moonbase-checkout-closed', {
         detail: { source: 'moonbase-checkout', event: 'close', completed: false },
@@ -390,7 +394,7 @@ export function mountCheckout(endpoint: string): void {
 
   const handleMessage = (e: MessageEvent) => {
     if (e.source !== iframe.contentWindow) return
-    if (e.origin && !isTrustedCheckoutOrigin(e.origin, endpoint)) return
+    if (!isTrustedCheckoutOrigin(e.origin, endpoint)) return
     const evnt = parseCheckoutMessage(e.data)
     if (!evnt) return
     if (evnt.event === 'ready') {
@@ -432,5 +436,5 @@ export function mountCheckout(endpoint: string): void {
 
   activeMessageListener = handleMessage
   window.addEventListener('message', handleMessage)
-  window.onmessage = handleMessage
 }
+

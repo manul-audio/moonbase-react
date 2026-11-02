@@ -12,3 +12,4 @@ export async function recordCheckoutGroups(
     console.warn('Moonbase: could not record checkout group enrollment', err)
   }
 }
+

@@ -124,3 +124,4 @@ describe('useCart parity', () => {
     expect(result.current.total.amount).toBe(1900)
   })
 })
+

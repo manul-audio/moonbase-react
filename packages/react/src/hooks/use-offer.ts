@@ -13,3 +13,4 @@ export function useOffer(
     (s) => s.storefront.offers?.find((o) => o.id === offerId) ?? null,
   )
 }
+

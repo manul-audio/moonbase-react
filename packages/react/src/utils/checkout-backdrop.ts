@@ -131,3 +131,4 @@ export function backdropInk(backdrop: ResolvedCheckoutBackdrop): string {
   })
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? DARK_INK : LIGHT_INK
 }
+

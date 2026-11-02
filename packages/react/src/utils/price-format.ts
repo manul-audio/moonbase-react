@@ -29,3 +29,4 @@ export function withPriceFormat(endpoint: string): string {
     return endpoint
   }
 }
+

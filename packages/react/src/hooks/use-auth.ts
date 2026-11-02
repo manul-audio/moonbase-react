@@ -194,3 +194,4 @@ export function useAuth(context?: StorefrontContext) {
     refreshUser,
   }
 }
+

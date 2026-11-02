@@ -39,3 +39,4 @@ export function upgradeVariation(
     upgrades.find((v) => v.id === defaultVariation?.id) ?? upgrades[0] ?? defaultVariation
   )
 }
+

@@ -9,3 +9,4 @@ export function onPageRestore(restore: () => void, target?: EventTarget): () => 
   scope.addEventListener('pageshow', handler)
   return () => scope.removeEventListener('pageshow', handler)
 }
+

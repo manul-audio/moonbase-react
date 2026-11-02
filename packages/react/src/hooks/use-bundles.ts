@@ -7,3 +7,4 @@ export function useBundles(context?: StorefrontContext): StorefrontBundle[] {
   const storefront = useStorefrontContext(context)
   return useStore(storefront.store, (s) => s.storefront.bundles)
 }
+

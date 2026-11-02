@@ -255,3 +255,4 @@ export function useInventory(context?: StorefrontContext) {
     updateSubscriptionPaymentMethod,
   }
 }
+

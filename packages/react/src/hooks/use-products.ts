@@ -7,3 +7,4 @@ export function useProducts(context?: StorefrontContext): StorefrontProduct[] {
   const storefront = useStorefrontContext(context)
   return useStore(storefront.store, (s) => s.storefront.products)
 }
+

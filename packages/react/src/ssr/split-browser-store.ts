@@ -67,3 +67,4 @@ export class SplitBrowserStore extends LocalStorageStore implements IStore {
     }
   }
 }
+

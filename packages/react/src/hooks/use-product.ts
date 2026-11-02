@@ -13,3 +13,4 @@ export function useProduct(
     (s) => s.storefront.products.find((p) => p.id === productId) ?? null,
   )
 }
+

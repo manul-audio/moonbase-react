@@ -31,3 +31,4 @@ export function useVendor(context?: StorefrontContext): VendorComposable {
 
   return { vendor, loading }
 }
+

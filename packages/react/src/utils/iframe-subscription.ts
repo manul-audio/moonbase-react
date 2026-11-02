@@ -47,7 +47,8 @@ export function mountSubscription(endpoint: string): void {
   const stopHeightTracking = trackViewportHeight(iframe)
 
   const handleMessage = (e: MessageEvent) => {
-    if (e.origin && !isTrustedCheckoutOrigin(e.origin, endpoint)) return
+    if (e.source !== iframe.contentWindow) return
+    if (!isTrustedCheckoutOrigin(e.origin, endpoint)) return
     try {
       const evnt = eventSchema.parse(e.data)
       if (evnt.event === 'close') {
@@ -71,5 +72,5 @@ export function mountSubscription(endpoint: string): void {
   }
 
   window.addEventListener('message', handleMessage)
-  window.onmessage = handleMessage
 }
+

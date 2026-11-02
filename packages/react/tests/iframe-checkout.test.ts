@@ -13,6 +13,7 @@ import {
   mountCheckout,
   parseCheckoutMessage,
 } from '../src/utils/iframe-checkout'
+import { mountSubscription } from '../src/utils/iframe-subscription'
 
 describe('embedded checkout & postMessage security', () => {
   it('decorates endpoint with backdrop and price format query params', () => {
@@ -79,4 +80,55 @@ describe('embedded checkout & postMessage security', () => {
     window.removeEventListener('moonbase-checkout-closed', onClose)
     closeCheckout()
   })
+
+  it('dispatches checkout window events exactly once per postMessage and enforces source/origin on mountSubscription', () => {
+    const onRejected = vi.fn()
+    window.addEventListener('moonbase-checkout-coupon-rejected', onRejected)
+
+    mountCheckout('https://demo.moonbase.sh/checkout/1')
+    const iframe = document.getElementById('moonbase-checkout') as HTMLIFrameElement
+
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        origin: 'https://demo.moonbase.sh',
+        source: iframe.contentWindow,
+        data: {
+          source: 'moonbase-checkout',
+          event: 'coupon-rejected',
+          code: 'BAD',
+        },
+      }),
+    )
+    expect(onRejected).toHaveBeenCalledTimes(1)
+    window.removeEventListener('moonbase-checkout-coupon-rejected', onRejected)
+    closeCheckout()
+
+    // Test mountSubscription source & origin enforcement + single dispatch
+    const onSubClosed = vi.fn()
+    window.addEventListener('moonbase-subscription-closed', onSubClosed)
+    mountSubscription('https://demo.moonbase.sh/subscriptions/1')
+    const subIframe = document.getElementById('moonbase-subscription') as HTMLIFrameElement
+
+    // Untrusted source or empty origin must be rejected
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        origin: '',
+        source: subIframe.contentWindow,
+        data: { source: 'moonbase-subscription', event: 'close', completed: true },
+      }),
+    )
+    expect(onSubClosed).not.toHaveBeenCalled()
+
+    // Trusted source + origin dispatches once
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        origin: 'https://demo.moonbase.sh',
+        source: subIframe.contentWindow,
+        data: { source: 'moonbase-subscription', event: 'close', completed: true },
+      }),
+    )
+    expect(onSubClosed).toHaveBeenCalledTimes(1)
+    window.removeEventListener('moonbase-subscription-closed', onSubClosed)
+  })
 })
+

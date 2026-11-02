@@ -13,3 +13,4 @@ export function useBundle(
     (s) => s.storefront.bundles.find((b) => b.id === bundleId) ?? null,
   )
 }
+

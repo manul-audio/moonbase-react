@@ -14,3 +14,4 @@ export function currentPageUrl(): string {
   if (typeof window === 'undefined' || !window.location) return ''
   return withoutHandshakeParams(window.location.href)
 }
+

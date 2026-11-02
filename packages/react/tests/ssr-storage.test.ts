@@ -57,3 +57,4 @@ describe('SplitBrowserStore and ServerCookieStore security', () => {
     expect(JSON.parse(serialized).currentUser.name).toBe('</script><script>alert(1)</script>')
   })
 })
+

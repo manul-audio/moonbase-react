@@ -46,3 +46,4 @@ export function removeStorage(key: string, kind: 'local' | 'session' = 'local'):
     // ignore storage removal errors
   }
 }
+

@@ -40,3 +40,4 @@ export function computeScale(): number | null {
   if (declared >= deviceWidth * COMPENSATION_THRESHOLD) return null
   return declared / deviceWidth
 }
+

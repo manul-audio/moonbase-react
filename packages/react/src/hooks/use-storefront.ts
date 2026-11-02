@@ -15,3 +15,4 @@ export function useStorefront(context?: StorefrontContext): {
   const closed = useStore(ctx.store, (s) => s.closed)
   return { context: ctx, storefront, loaded, closed }
 }
+

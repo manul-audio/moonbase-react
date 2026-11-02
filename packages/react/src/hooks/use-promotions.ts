@@ -9,3 +9,4 @@ export function usePromotions(context?: StorefrontContext): StorefrontPromotion[
   const storefront = useStorefrontContext(context)
   return useStore(storefront.store, (s) => s.storefront.promotions ?? EMPTY_PROMOTIONS)
 }
+

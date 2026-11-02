@@ -54,3 +54,4 @@ export function useCommunicationPreferences(context?: StorefrontContext) {
     unsubscribe,
   }
 }
+

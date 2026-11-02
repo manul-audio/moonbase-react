@@ -167,6 +167,7 @@ export class StorefrontContextImpl implements StorefrontContext {
   private storeAllowsAttribution: boolean | undefined
   private arrival: UrchinTrackingModule | undefined
   private browserCleanup: (() => void) | null = null
+  private tokenStoreSessionEndedAttached = false
   private readonly debouncedPushOrderContent: ((order: OpenOrder) => Promise<void>) & {
     cancel: () => void
   }
@@ -337,7 +338,10 @@ export class StorefrontContextImpl implements StorefrontContext {
 
     const storageListener = (event: StorageEvent) => this.handleStorageUpdate(event)
     window.addEventListener('storage', storageListener)
-    this.client.tokenStore.onSessionEnded(() => this.endSession())
+    if (!this.tokenStoreSessionEndedAttached) {
+      this.tokenStoreSessionEndedAttached = true
+      this.client.tokenStore.onSessionEnded(() => this.endSession())
+    }
 
     const urlParams = new URLSearchParams(window.location.search)
     const fresh: UrchinTrackingModule = {

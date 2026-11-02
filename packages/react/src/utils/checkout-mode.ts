@@ -91,3 +91,4 @@ export function resolveCheckoutRedirect(
 export function resolveRedirect(redirect: boolean | CheckoutRedirectMode = 'auto'): boolean {
   return resolveCheckoutRedirect(redirect).redirect
 }
+

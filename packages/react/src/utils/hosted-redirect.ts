@@ -26,3 +26,4 @@ export function buildHostedRedirectUrl(
   url.searchParams.set('return', completion.toString())
   return withPriceFormat(url.toString())
 }
+

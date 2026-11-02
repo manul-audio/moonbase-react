@@ -6,3 +6,4 @@ export function resolveDisplayCurrency(
 ): string {
   return storefront?.suggestedCurrency || order?.currency || ''
 }
+
