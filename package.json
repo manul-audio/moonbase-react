@@ -9,7 +9,12 @@
     "test:live": "pnpm --filter @moonbase.sh/react test:live",
     "test:all": "pnpm --filter @moonbase.sh/react test:all",
     "type-check": "pnpm --filter @moonbase.sh/react type-check",
-    "check:exports": "pnpm --filter @moonbase.sh/react check:exports"
+    "check:exports": "pnpm --filter @moonbase.sh/react check:exports",
+    "changeset": "changeset",
+    "version-packages": "changeset version"
   },
-  "packageManager": "pnpm@10.34.5"
+  "packageManager": "pnpm@10.34.5",
+  "devDependencies": {
+    "@changesets/cli": "^3.0.3"
+  }
 }
