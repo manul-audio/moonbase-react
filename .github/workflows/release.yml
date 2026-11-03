@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build, pack, and attach to GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Tag must match the package version
+        run: |
+          PKG_VERSION=$(node -p "require('./packages/react/package.json').version")
+          if [ "v$PKG_VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package version $PKG_VERSION" >&2
+            exit 1
+          fi
+
+      - run: pnpm type-check
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm check:exports
+
+      - name: Pack
+        run: pnpm --filter @moonbase.sh/react pack --pack-destination ./release
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" release/*.tgz \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file packages/react/CHANGELOG.md
