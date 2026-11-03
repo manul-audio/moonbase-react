@@ -6,6 +6,8 @@
   "scripts": {
     "build": "pnpm --filter @moonbase.sh/react build",
     "test": "pnpm --filter @moonbase.sh/react test",
+    "test:live": "pnpm --filter @moonbase.sh/react test:live",
+    "test:all": "pnpm --filter @moonbase.sh/react test:all",
     "type-check": "pnpm --filter @moonbase.sh/react type-check"
   }
 }
