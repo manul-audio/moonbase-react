@@ -1,20 +1,34 @@
+import { createRequire } from 'node:module'
 import { NotFoundError } from '@moonbase.sh/storefront-api'
 import { describe, expect, it } from 'vitest'
 import { createStorefront } from '../../src/context'
 import { createServerStorefront, serializeStorefrontState } from '../../src/ssr'
+
+const pkg = createRequire(import.meta.url)('../../package.json') as { version: string }
 
 // Read-only checks against a real Moonbase tenant. Nothing here signs in,
 // signs up, creates an order, or redeems a voucher. The tenant can be
 // pointed elsewhere with MOONBASE_LIVE_ENDPOINT.
 const endpoint = process.env.MOONBASE_LIVE_ENDPOINT ?? 'https://corino-demo.moonbase.sh'
 
+function skipNotice(reason: string): void {
+  const message = `Live tests skipped: ${endpoint}/api/customer/storefront ${reason}`
+  console.warn(message)
+  if (process.env.GITHUB_ACTIONS) console.log(`::warning::${message}`)
+}
+
+// Any HTTP response below 500 counts as reachable, so a 404 or 410 (API drift)
+// lets the tests run and fail loudly. Only network errors, timeouts and 5xx skip.
 async function tenantReachable(): Promise<boolean> {
   try {
     const res = await fetch(`${endpoint}/api/customer/storefront`, {
       signal: AbortSignal.timeout(5_000),
     })
-    return res.ok
-  } catch {
+    if (res.status < 500) return true
+    skipNotice(`responded with HTTP ${res.status}`)
+    return false
+  } catch (error) {
+    skipNotice(`is unreachable (${error instanceof Error ? error.message : String(error)})`)
     return false
   }
 }
@@ -82,5 +96,6 @@ describe.skipIf(!reachable)(`live demo tenant (${endpoint})`, () => {
 
     expect(seen.length).toBeGreaterThan(0)
     expect(seen[0]).toMatch(/@moonbase\.sh\/react\/\d+\.\d+\.\d+/)
+    expect(seen[0]).toContain(`@moonbase.sh/react/${pkg.version}`)
   })
 })
