@@ -97,6 +97,7 @@
     "test:watch": "vitest",
     "test:live": "vitest run --config vitest.live.config.ts",
     "test:all": "pnpm test && pnpm test:live",
-    "check:exports": "publint && attw --pack ."
+    "check:exports": "publint && attw --pack .",
+    "prepack": "node -e \"require('node:fs').copyFileSync('../../LICENSE', 'LICENSE')\""
   }
 }

@@ -591,3 +591,13 @@ A Moonbase account configured for custom storefront mode redirects users to merc
 | `ManageSubscription` | `/subscriptions` | `subscription_id` | `useInventory().getSubscription(subscriptionId)` |
 
 The paths above are suggestions; configure the paths on your Moonbase account to match the routes your storefront implements.
+
+## Attribution
+
+The hook API and store architecture of this package follow the design of
+[`@moonbase.sh/vue`](https://www.npmjs.com/package/@moonbase.sh/vue) (MIT,
+Moonbase), re-implemented for React on top of
+[`@moonbase.sh/storefront-api`](https://www.npmjs.com/package/@moonbase.sh/storefront-api).
+This is an independent implementation and is not endorsed by Moonbase.
+
+Licensed under the [MIT License](../../LICENSE).
