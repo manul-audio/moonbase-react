@@ -8,6 +8,8 @@
     "test": "pnpm --filter @moonbase.sh/react test",
     "test:live": "pnpm --filter @moonbase.sh/react test:live",
     "test:all": "pnpm --filter @moonbase.sh/react test:all",
-    "type-check": "pnpm --filter @moonbase.sh/react type-check"
-  }
+    "type-check": "pnpm --filter @moonbase.sh/react type-check",
+    "check:exports": "pnpm --filter @moonbase.sh/react check:exports"
+  },
+  "packageManager": "pnpm@10.34.5"
 }
