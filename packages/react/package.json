@@ -63,7 +63,8 @@
   "files": [
     "dist/**",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
