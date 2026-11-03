@@ -2,7 +2,7 @@
 
 ## Toolchain
 
-- Node 22 or newer
+- Node 22.11 or newer
 - pnpm 10 (the exact version is pinned in `package.json` `packageManager`; `corepack enable` or `npm i -g pnpm@10` both work)
 
 ```bash
@@ -38,7 +38,7 @@ pnpm changeset
 
 Pick `@moonbase.sh/react`, choose patch/minor/major, write one or two sentences for the changelog. Commit the generated `.changeset/*.md` with your change.
 
-Releasing (maintainers): on `main`, run `pnpm version-packages`, review the bumped `packages/react/package.json` and `CHANGELOG.md`, commit as `chore(release): vX.Y.Z`, then tag and push:
+Releasing (maintainers): on `main`, first bump `SDK_VERSION` in `packages/react/src/context.ts` to the new version; the live header test fails if it disagrees with `package.json`. Then run `pnpm version-packages`, review the bumped `packages/react/package.json` and `CHANGELOG.md`, commit as `chore(release): vX.Y.Z`, then tag and push:
 
 ```bash
 git tag vX.Y.Z && git push origin main vX.Y.Z
