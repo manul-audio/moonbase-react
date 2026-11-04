@@ -1,6 +1,6 @@
 {
   "name": "@moonbase.sh/react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Headless React.js SDK for Moonbase.sh storefronts with SSR hydration and Zustand state management",
   "license": "MIT",
   "author": "Oleksandr Alieksieiev (Manul Audio)",

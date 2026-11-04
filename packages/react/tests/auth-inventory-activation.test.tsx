@@ -84,6 +84,58 @@ describe('useAuth, useActivationRequest, useVoucher, useCommunicationPreferences
     await waitFor(() => expect(result.current.isInstalled).toBe(true))
   })
 
+  function activationHarness() {
+    const sf = createStorefront('https://demo.moonbase.sh')
+    vi.spyOn(sf, 'updateStorefront').mockResolvedValue(sf.storefront)
+    vi.spyOn(sf, 'updateUser').mockResolvedValue(null)
+    sf.store.setState({ loadedUser: true, loadedStorefront: true })
+    vi.spyOn(sf.client.activationRequests, 'get').mockResolvedValue({
+      id: 'ar-2',
+      status: ActivationRequestStatus.Requested,
+      licenseEligibility: { eligible: true },
+      trialEligibility: { eligible: true, requiresNewsletterOptIn: false },
+    } as any)
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <StorefrontProvider storefront={sf}>{children}</StorefrontProvider>
+    )
+    return { sf, wrapper }
+  }
+
+  it('fulfillLicense failure surfaces as error and resets fulfilling instead of rejecting', async () => {
+    const { sf, wrapper } = activationHarness()
+    vi.spyOn(sf.client.activationRequests, 'fulfillLicense').mockRejectedValue(
+      new Error('No free seats'),
+    )
+    const { result } = renderHook(() => useActivationRequest('tok-456'), { wrapper })
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    await act(async () => {
+      await expect(result.current.fulfillLicense()).resolves.toBeUndefined()
+    })
+
+    expect(result.current.error).toBe('No free seats')
+    expect(result.current.fulfilling).toBe(false)
+    expect(result.current.completing).toBe(false)
+    expect(result.current.activationRequest?.status).toBe(ActivationRequestStatus.Requested)
+  })
+
+  it('fulfillTrial failure surfaces as error and resets fulfilling', async () => {
+    const { sf, wrapper } = activationHarness()
+    vi.spyOn(sf.client.activationRequests, 'fulfillTrial').mockRejectedValue(
+      new Error('Trial already used'),
+    )
+    const { result } = renderHook(() => useActivationRequest('tok-789'), { wrapper })
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    await act(async () => {
+      await expect(result.current.fulfillTrial(false)).resolves.toBeUndefined()
+    })
+
+    expect(result.current.error).toBe('Trial already used')
+    expect(result.current.fulfilling).toBe(false)
+    expect(result.current.completing).toBe(false)
+  })
+
   it('redeems voucher and translates NotFoundError to "Voucher code invalid"', async () => {
     const sf = createStorefront('https://demo.moonbase.sh')
     sf.store.setState({ currentUser: { id: 'u1' } as any, loadedUser: true, loadedStorefront: true })

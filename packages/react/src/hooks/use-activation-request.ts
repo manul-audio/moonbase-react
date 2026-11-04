@@ -140,14 +140,24 @@ export function useActivationRequest(
     const active = activationRef.current
     if (!active) return
     setFulfilling(true)
-    const updated = await storefront.client.activationRequests.fulfillLicense(
-      active.id,
-    )
-    activationRef.current = updated
-    setActivationRequest(updated)
-    setFulfilling(false)
-    setCompleting(true)
-    await checkCompletion(updated)
+    try {
+      const updated = await storefront.client.activationRequests.fulfillLicense(
+        active.id,
+      )
+      activationRef.current = updated
+      setActivationRequest(updated)
+      setFulfilling(false)
+      setCompleting(true)
+      await checkCompletion(updated)
+    } catch (err) {
+      console.warn('Could not fulfill license: ', err)
+      if (err instanceof NotAuthenticatedError) {
+        setError('You need to be signed in to do this')
+      } else {
+        setError(err instanceof Error ? err.message : String(err))
+      }
+      setFulfilling(false)
+    }
   }, [storefront, checkCompletion])
 
   const fulfillTrial = useCallback(
