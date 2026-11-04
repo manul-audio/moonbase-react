@@ -3,6 +3,29 @@
   "version": "0.1.0",
   "description": "Headless React.js SDK for Moonbase.sh storefronts with SSR hydration and Zustand state management",
   "license": "MIT",
+  "author": "Oleksandr Alieksieiev (Manul Audio)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manul-audio/moonbase-react.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/manul-audio/moonbase-react/tree/main/packages/react#readme",
+  "bugs": {
+    "url": "https://github.com/manul-audio/moonbase-react/issues"
+  },
+  "keywords": [
+    "moonbase",
+    "react",
+    "storefront",
+    "checkout",
+    "licensing",
+    "hooks",
+    "ssr",
+    "nextjs"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",
@@ -10,19 +33,38 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./ssr": {
-      "types": "./dist/ssr/index.d.ts",
-      "import": "./dist/ssr/index.js",
-      "require": "./dist/ssr/index.cjs"
+      "import": {
+        "types": "./dist/ssr/index.d.ts",
+        "default": "./dist/ssr/index.js"
+      },
+      "require": {
+        "types": "./dist/ssr/index.d.cts",
+        "default": "./dist/ssr/index.cjs"
+      }
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "ssr": [
+        "./dist/ssr/index.d.ts"
+      ]
     }
   },
   "files": [
     "dist/**",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -35,12 +77,14 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/uuid": "^9.0.8",
     "jsdom": "^25.0.1",
+    "publint": "^0.3.25",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tsup": "^8.4.0",
@@ -51,7 +95,10 @@
     "build": "tsup",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:live": "vitest run --config vitest.live.config.ts",
+    "test:all": "pnpm test && pnpm test:live",
+    "check:exports": "publint && attw --pack .",
+    "prepack": "node -e \"require('node:fs').copyFileSync('../../LICENSE', 'LICENSE')\""
   }
 }
-

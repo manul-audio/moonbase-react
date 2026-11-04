@@ -1,4 +1,7 @@
-﻿.superpowers/
+.superpowers/
 node_modules/
 dist/
 .turbo/
+.tmp-pack/
+packages/react/LICENSE
+.worktrees/
