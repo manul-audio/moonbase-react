@@ -45,7 +45,7 @@ import { mountSubscription } from './utils/iframe-subscription'
 import { withoutHandshakeParams } from './utils/return-url'
 import { readStorage, removeStorage, writeStorage } from './utils/safe-storage'
 
-const SDK_VERSION = '0.1.0'
+const SDK_VERSION = '0.1.1'
 
 export interface MoonbaseReactConfiguration extends Omit<MoonbaseConfiguration, 'endpoint'> {
   autoApplyItemOffers?: boolean
@@ -330,6 +330,12 @@ export class StorefrontContextImpl implements StorefrontContext {
       currentOrder: nextOrder,
       vendor: state.vendor ?? current.vendor,
     })
+    // Server rendering and React's hydration pass read the store through
+    // useSyncExternalStore's server snapshot, which zustand serves from
+    // getInitialState(), not getState(). Pin that snapshot to the hydrated
+    // state so SSR output and the hydration render both see the catalog.
+    const hydrated = this.store.getState()
+    this.store.getInitialState = () => hydrated
   }
 
   bootBrowser(options?: { skipInitialFetch?: boolean }): () => void {
