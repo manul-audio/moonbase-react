@@ -51,7 +51,8 @@
         "types": "./dist/ssr/index.d.cts",
         "default": "./dist/ssr/index.cjs"
       }
-    }
+    },
+    "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
