@@ -19,13 +19,13 @@ official React SDK. Not yet on npm. Install a tagged build from the
 [Releases](https://github.com/manul-audio/moonbase-react/releases) page:
 
 ```bash
-pnpm add https://github.com/manul-audio/moonbase-react/releases/download/v0.1.1/moonbase.sh-react-0.1.1.tgz
+pnpm add https://github.com/manul-audio/moonbase-react/releases/download/v0.1.2/moonbase.sh-react-0.1.2.tgz
 ```
 
 npm 12 and newer refuse remote tarballs unless you opt in:
 
 ```bash
-npm install --allow-remote=all https://github.com/manul-audio/moonbase-react/releases/download/v0.1.1/moonbase.sh-react-0.1.1.tgz
+npm install --allow-remote=all https://github.com/manul-audio/moonbase-react/releases/download/v0.1.2/moonbase.sh-react-0.1.2.tgz
 ```
 
 ## Develop

@@ -45,7 +45,7 @@ import { mountSubscription } from './utils/iframe-subscription'
 import { withoutHandshakeParams } from './utils/return-url'
 import { readStorage, removeStorage, writeStorage } from './utils/safe-storage'
 
-const SDK_VERSION = '0.1.1'
+const SDK_VERSION = '0.1.2'
 
 export interface MoonbaseReactConfiguration extends Omit<MoonbaseConfiguration, 'endpoint'> {
   autoApplyItemOffers?: boolean
